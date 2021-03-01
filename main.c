@@ -22,15 +22,27 @@ int nrElem = 0;
 void menu() {
     if (initialized == 0) {
         struct entry tempEntry;
+
+        char key;
+        printf("We'll start by adding one entry\n\n\nPress a key to start the program");
+
+        for(;;)
+           if (kbhit())
+                {key = getch();break;}
+        system("CLS");
+
         printf("Add a first entry:\n");
         printf("Brand:");
-        scanf("%s", &tempEntry.brand);
+        //scanf("%s", &tempEntry.brand);
+        gets(tempEntry.brand);
         printf("Product Name:");
-        scanf("%s", &tempEntry.productName);
+        //scanf("%s", &tempEntry.productName);
+        gets(tempEntry.productName);
         printf("Price:");
         scanf("%f", &tempEntry.price);
         printf("Products in stock: ");
         scanf("%d", &tempEntry.stock);
+
         struct nod *p = (struct nod *) malloc(sizeof(struct nod));
         p->data = tempEntry;
         p->urm = NULL;
@@ -50,9 +62,11 @@ void addFirst() {
     system("CLS");
     struct entry tempEntry;
     printf("Brand:");
-    scanf("%s", &tempEntry.brand);
+    //scanf("%s", &tempEntry.brand);
+    gets(tempEntry.brand);
     printf("Product Name:");
-    scanf("%s", &tempEntry.productName);
+    //scanf("%s", &tempEntry.productName);
+    gets(tempEntry.productName);
     printf("Price:");
     scanf("%f", &tempEntry.price);
     printf("Products in stock: ");
@@ -67,9 +81,11 @@ void addLast() {
     system("CLS");
     struct entry tempEntry;
     printf("Brand:");
-    scanf("%s", &tempEntry.brand);
+    //scanf("%s", &tempEntry.brand);
+    gets(tempEntry.brand);
     printf("Product Name:");
-    scanf("%s", &tempEntry.productName);
+    //scanf("%s", &tempEntry.productName);
+    gets(tempEntry.productName);
     printf("Price:");
     scanf("%f", &tempEntry.price);
     printf("Products in stock: ");
@@ -83,8 +99,17 @@ void addLast() {
 
 void addPosition() {
     int index, i = 1;
+
     printf("Which position should the entry be placed after?[0-%d]\n", nrElem);
-    scanf("%d", &index);
+    //scanf("%d", &index);
+
+    for(;;)
+           if (kbhit())
+                {index = getch();
+                break;}
+        index = (int)index-48;
+
+
     if (index < 0 || index > nrElem) {
         printf("Invalid Choice");
         getch();
@@ -100,14 +125,18 @@ void addPosition() {
                 i++;
             }
             struct entry tempEntry;
+
             printf("Brand:");
-            scanf("%s", &tempEntry.brand);
+            //scanf("%s", &tempEntry.brand);
+            gets(tempEntry.brand);
             printf("Product Name:");
-            scanf("%s", &tempEntry.productName);
+            //scanf("%s", &tempEntry.productName);
+            gets(tempEntry.productName);
             printf("Price:");
             scanf("%f", &tempEntry.price);
             printf("Products in stock: ");
             scanf("%d", &tempEntry.stock);
+
             struct nod *q = (struct nod *) malloc(sizeof(struct nod));
             q->data = tempEntry;
             q->urm = p->urm;
@@ -120,11 +149,20 @@ void addPosition() {
 void adaugare() {
     system("CLS");
     int choice;
+
     printf("Where should the entry be added?\n\n");
     printf("1. As the first entry\n");
     printf("2. As the last entry\n");
     printf("3. After index X\n");
-    scanf("%d", &choice);
+
+    //scanf("%d", &choice);
+    for(;;)
+           if (kbhit())
+                {choice = getch();
+                break;}
+        choice = (int)choice-48;
+        fflush(stdin);
+
     switch (choice) {
         case 1:
             addFirst();
@@ -171,24 +209,39 @@ void stergPrim() {
 
 void stergUlt() {
     if (nrElem == 0) return;
-    if (last != NULL)
-        nrElem--;
-    struct nod *p = first;
-    while (p->urm != last) {
-        p = p->urm;
-    }
-    struct nod *q = last;
-    p->urm = NULL;
-    last = p;
-    free(q);
-}
 
+    if (nrElem == 1)
+        {stergPrim();
+         }
+
+    else{
+        if (last != NULL)
+            nrElem--;
+        struct nod *p = first;
+        while (p->urm != last) {
+            p = p->urm;
+        }
+    //hangs up here
+        struct nod *q = last;
+        p->urm = NULL;
+        last = p;
+        free(q);
+
+}
+}
 void stergPosi() {
     if (nrElem == 0) return;
     system("CLS");
     int index;
     printf("Insert the index of the entry you wish removed [1-%d]:\n", nrElem);
-    scanf("%d", &index);
+    //scanf("%d", &index);
+
+    for(;;)
+           if (kbhit())
+                {index = getch();
+                break;}
+        index = (int)index-48;
+
     if (index < 1 || index > nrElem) {
         printf("Invalid Choice");
         getch();
@@ -218,7 +271,9 @@ void stergX() {
     system("CLS");
     printf("Enter the name of the product to be removed (CaSe SeNsItIvE)\n");
     char tempName[50];
-    scanf("%s", &tempName);
+    //scanf("%s", &tempName);
+    //getch();
+    gets(tempName);
     struct nod *p = first;
     if (strcmp(p->data.productName, tempName) == 0)
         stergPrim();
@@ -242,19 +297,26 @@ void stergX() {
 void stergere() {
     system("CLS");
     int choice;
+
     printf("Which entry should be removed?\n\n");
     printf("1. First entry\n");
     printf("2. Last entry\n");
     printf("3. Entry at index X\n");
     printf("4. Product named \"X\"\n");
-    scanf("%d", &choice);
+    //scanf("%d", &choice);
+
+    for(;;)
+           if (kbhit())
+                {choice = getch();
+                break;}
+        choice = (int)choice-48;
+
     switch (choice) {
         case 1:
             stergPrim();
             break;
         case 2:
             stergUlt();
-
             break;
         case 3:
             stergPosi();
@@ -263,7 +325,7 @@ void stergere() {
             stergX();
             break;
         default:
-            scanf("Invalid Choice");
+            printf("Invalid Choice");
             getch();
             return;
     }
@@ -274,7 +336,15 @@ int main() {
     int choice;
     while (1) {
         menu();
-        scanf("%d", &choice);
+
+        for(;;)
+           if (kbhit())
+                {choice = getch();
+                break;}
+        choice = (int)choice-48;
+        fflush(stdin);
+
+        //scanf("%d", &choice);
         switch (choice) {
             case 1:
                 adaugare();
@@ -293,6 +363,3 @@ int main() {
         }
     }
 }
-
-
-//Test
