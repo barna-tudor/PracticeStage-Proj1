@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
+#include <windows.h>
+#include <time.h>
+#include <unistd.h>
+
+HANDLE wHnd;
+HANDLE rHnd;
 
 struct entry {
     char brand[20], productName[50];
@@ -24,11 +30,22 @@ void menu() {
         struct entry tempEntry;
 
         char key;
-        printf("We'll start by adding one entry\n\n\nPress a key to start the program");
 
-        for(;;)
-           if (kbhit())
-                {key = getch();break;}
+        printf("╔══════════════════════════════════════════════════╗\n");
+        printf("║                  Project made by                 ║\n");
+        printf("║              Balint Armand-Alexandru             ║\n");
+        printf("║                Barna Tudor Cristian              ║\n");
+        printf("╠══════════════════════════════════════════════════╣\n");
+        printf("║         We'll start by adding one entry          ║\n");
+        printf("╠══════════════════════════════════════════════════╣\n");
+        printf("║        Press any key to start the program        ║\n");
+        printf("╚══════════════════════════════════════════════════╝\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+        for (;;)
+            if (kbhit()) {
+                key = getch();
+                break;
+            }
         system("CLS");
 
         printf("Add a first entry:\n");
@@ -53,7 +70,17 @@ void menu() {
         initialized = 1;
     }
     system("CLS");
-    printf("1. Add entry\n2. Remove entry\n3. Print current entry list\n4. Exit\nInput a choice : ");
+    printf("╔══════════════════════════════════════════════════╗\n");
+    printf("║                   1. Add entry                   ║\n");
+    printf("║                  2. Remove entry                 ║\n");
+    printf("║            3. Print current entry list           ║\n");
+    printf("║           4. Write the list into a file          ║\n");
+    printf("║             5. Remove background color           ║\n");
+    printf("║                     6. Info                      ║\n");
+    printf("║                     7. Exit                      ║\n");
+    printf("╠══════════════════════════════════════════════════╣\n");
+    printf("║Press the key corresponding to your desired action║\n");
+    printf("╚══════════════════════════════════════════════════╝\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     return;
 
 }
@@ -78,6 +105,7 @@ void addFirst() {
 }
 
 void addLast() {
+    printf("first!=last");
     system("CLS");
     struct entry tempEntry;
     printf("Brand:");
@@ -93,8 +121,14 @@ void addLast() {
     struct nod *p = (struct nod *) malloc(sizeof(struct nod));
     p->data = tempEntry;
     p->urm = NULL;
-    last->urm = p;
-    last = p;
+    if (nrElem != 0) {
+        last->urm = p;
+        last = p;
+    } else {
+        first = p;
+        last = p;
+    }
+
 }
 
 void addPosition() {
@@ -103,11 +137,12 @@ void addPosition() {
     printf("Which position should the entry be placed after?[0-%d]\n", nrElem);
     //scanf("%d", &index);
 
-    for(;;)
-           if (kbhit())
-                {index = getch();
-                break;}
-        index = (int)index-48;
+    for (;;)
+        if (kbhit()) {
+            index = getch();
+            break;
+        }
+    index = (int) index - 48;
 
 
     if (index < 0 || index > nrElem) {
@@ -150,18 +185,23 @@ void adaugare() {
     system("CLS");
     int choice;
 
-    printf("Where should the entry be added?\n\n");
-    printf("1. As the first entry\n");
-    printf("2. As the last entry\n");
-    printf("3. After index X\n");
 
+    printf("╔══════════════════════════════════════════════════╗\n");
+    printf("║         Where should the entry be added?         ║\n");
+    printf("║               1. As the first entry              ║\n");
+    printf("║               2. As the last entry               ║\n");
+    printf("║               3. After index X                   ║\n");
+    printf("╠══════════════════════════════════════════════════╣\n");
+    printf("║Press the key corresponding to your desired action║\n");
+    printf("╚══════════════════════════════════════════════════╝\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     //scanf("%d", &choice);
-    for(;;)
-           if (kbhit())
-                {choice = getch();
-                break;}
-        choice = (int)choice-48;
-        fflush(stdin);
+    for (;;)
+        if (kbhit()) {
+            choice = getch();
+            break;
+        }
+    choice = (int) choice - 48;
+    fflush(stdin);
 
     switch (choice) {
         case 1:
@@ -190,7 +230,7 @@ void afisare() {
     int i = 0;
     system("CLS");
     struct nod *p = first;
-    printf("Current entry list: \n");
+    printf("Current entry list: \n\n");
     while (p != NULL) {
         printf("%d. %s, %s, %f, %d\n", ++i, p->data.brand, p->data.productName, p->data.price, p->data.stock);
         p = p->urm;
@@ -209,26 +249,22 @@ void stergPrim() {
 
 void stergUlt() {
     if (nrElem == 0) return;
-
-    if (nrElem == 1)
-        {stergPrim();
-         }
-
-    else{
+    if (nrElem == 1) {
+        stergPrim();
+    } else {
         if (last != NULL)
             nrElem--;
         struct nod *p = first;
         while (p->urm != last) {
             p = p->urm;
         }
-    //hangs up here
         struct nod *q = last;
         p->urm = NULL;
         last = p;
         free(q);
+    }
+}
 
-}
-}
 void stergPosi() {
     if (nrElem == 0) return;
     system("CLS");
@@ -236,11 +272,12 @@ void stergPosi() {
     printf("Insert the index of the entry you wish removed [1-%d]:\n", nrElem);
     //scanf("%d", &index);
 
-    for(;;)
-           if (kbhit())
-                {index = getch();
-                break;}
-        index = (int)index-48;
+    for (;;)
+        if (kbhit()) {
+            index = getch();
+            break;
+        }
+    index = (int) index - 48;
 
     if (index < 1 || index > nrElem) {
         printf("Invalid Choice");
@@ -298,18 +335,23 @@ void stergere() {
     system("CLS");
     int choice;
 
-    printf("Which entry should be removed?\n\n");
-    printf("1. First entry\n");
-    printf("2. Last entry\n");
-    printf("3. Entry at index X\n");
-    printf("4. Product named \"X\"\n");
+    printf("╔══════════════════════════════════════════════════╗\n");
+    printf("║           Which entry should be removed?         ║\n");
+    printf("║                 1. First entry                   ║\n");
+    printf("║                 2. Last entry                    ║\n");
+    printf("║                 3. Entry at index X              ║\n");
+    printf("║                 4. Product named X               ║\n");
+    printf("╠══════════════════════════════════════════════════╣\n");
+    printf("║Press the key corresponding to your desired action║\n");
+    printf("╚══════════════════════════════════════════════════╝\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     //scanf("%d", &choice);
 
-    for(;;)
-           if (kbhit())
-                {choice = getch();
-                break;}
-        choice = (int)choice-48;
+    for (;;)
+        if (kbhit()) {
+            choice = getch();
+            break;
+        }
+    choice = (int) choice - 48;
 
     switch (choice) {
         case 1:
@@ -332,16 +374,65 @@ void stergere() {
 
 }
 
+
+void printToFile() {
+    // Have fun
+    system("CLS");
+    printf("WIP");
+    Sleep(1000);
+}
+
+void info() {
+    char key;
+
+    system("CLS");
+    printf("╔══════════════════════════════════════════════════╗\n");
+    printf("║           In this project you can find:          ║\n");
+    printf("║                 1. Structs                       ║\n");
+    printf("║                 2. Linked lists                  ║\n");
+    printf("║                 3. Malloc / pointers             ║\n");
+    printf("║                 4. Use of windows.h              ║\n");
+    printf("║                 5. Console edits                 ║\n");
+    printf("║                 6. Customized executable file    ║\n");
+    printf("║                 7. File usage (WIP)              ║\n");
+    printf("║                 8. Custom console UI             ║\n");
+    printf("║                 9. Keypress detection            ║\n");
+    printf("║                10. Nested function calls         ║\n");
+    printf("╠══════════════════════════════════════════════════╣\n");
+    printf("║   The code can be found on both of our githubs   ║\n");
+    printf("╠══════════════════════════════════════════════════╣\n");
+    printf("║   If you encounter any error, let us know ASAP   ║\n");
+    printf("╠══════════════════════════════════════════════════╣\n");
+    printf("║         Press any key to leave this page         ║\n");
+    printf("╚══════════════════════════════════════════════════╝\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+    for (;;)
+        if (kbhit()) {
+            key = getch();
+            break;
+        }
+    system("CLS");
+
+}
+
 int main() {
     int choice;
+    wHnd = GetStdHandle(STD_OUTPUT_HANDLE);
+    rHnd = GetStdHandle(STD_INPUT_HANDLE);
+    SetConsoleTitle("                                          Practice Stage Project");
+    SMALL_RECT windowSize = {0, 0, 53, 40};
+    SetConsoleWindowInfo(wHnd, 1, &windowSize);
+    system("color 8B");
+
     while (1) {
         menu();
 
-        for(;;)
-           if (kbhit())
-                {choice = getch();
-                break;}
-        choice = (int)choice-48;
+        for (;;)
+            if (kbhit()) {
+                choice = getch();
+                break;
+            }
+        choice = (int) choice - 48;
         fflush(stdin);
 
         //scanf("%d", &choice);
@@ -356,6 +447,24 @@ int main() {
                 afisare();
                 break;
             case 4:
+                printToFile();
+                break;
+            case 5:
+                system("color B");
+                break;
+            case 6:
+                info();
+                break;
+            case 7:
+                system("CLS");
+                printf("Application will now close");
+                Sleep(500);
+                printf(".");
+                Sleep(500);
+                printf(".");
+                Sleep(500);
+                printf(".");
+                Sleep(500);
                 return 0;
             default:
                 printf("Alegere invalida");
